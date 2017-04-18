@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,17 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-        href="https://github.com/substack/coverify"
-
-    >coverify (v1.4.1)</a>
+    <a href="https://github.com/substack/coverify">coverify (v1.4.1)</a>
 </h1>
 <h4>code coverage browserify transform</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.coverify">module coverify</a><ol>
 
@@ -86,12 +79,12 @@
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">coverify = function (file, opts) {
-    if (typeof file === &#x27;object&#x27;) {
+    if (typeof file === 'object') {
         opts = file;
         file = undefined;
     }
     if (!opts) opts = {};
-    var outputFn = opts.output || &#x27;console.log&#x27;;
+    var outputFn = opts.output || 'console.log';
 
     var expected = [];
 
@@ -103,46 +96,46 @@
 
     function end () {
         var body = Buffer.concat(chunks)
-            .toString(&#x27;utf8&#x27;)
-            .replace(/^#!/, &#x27;//#!&#x27;)
+            .toString('utf8')
+            .replace(/^#!/, '//#!')
         ;
 
         if (file.match(/\.json$/)) {
-            this.push(&#x27;module.exports=&#x27; + body);
+            this.push('module.exports=' + body);
             this.push(null);
             return;
         }
 
         var fopts = { locations: true, ecmaVersion: 6 };
-        try { var src = falafel(body, fopts, walk) + &#x27;&#x27; }
+        try { var src = falafel(body, fopts, walk) + '' }
         catch (err) { return onerror(err, file,body) }
         var sfile = JSON.stringify(JSON.stringify(file));
 
         var origBody = body;
         var bodySourceMap = convertSourceMap.fromSource(body);
-        if (bodySourceMap &#x26;&#x26; bodySourceMap.sourcemap.mappings) {
+        if (bodySourceMap &amp;&amp; bodySourceMap.sourcemap.mappings) {
             bodySourceMap = new sourceMap.SourceMapConsumer(bodySourceMap.sourcemap);
             origBody = bodySourceMap.sourceContentFor(slash(file));
             function originalLoc (loc) {
                 var pos = bodySourceMap.originalPositionFor(loc);
-                if (pos.line &#x26;&#x26; pos.column) {
+                if (pos.line &amp;&amp; pos.column) {
                     return { line: pos.line, column: pos.column };
                 }
             }
             expected = expected.map(function (loc) {
                 var origStart = originalLoc(loc.start);
                 var origEnd = originalLoc(loc.end);
-                if (origStart &#x26;&#x26; origEnd) {
+                if (origStart &amp;&amp; origEnd) {
                     return { start: originalLoc(loc.start), end: originalLoc(loc.end) };
                 }
                 else return false;
             });
         }
 
-        var lines = origBody.split(&#x27;\n&#x27;);
+        var lines = origBody.split('\n');
         var lineOffsets = [];
         var offset = 0;
-        for (var i = 0; i &#x3c; lines.length; i++) {
+        for (var i = 0; i &lt; lines.length; i++) {
             lineOffsets[i] = offset;
             offset += lines[i].length + 1;
         }
@@ -155,50 +148,50 @@
         });
 
         this.push(
-            outputFn + &#x27;(&#x22;COVERAGE &#x22; + &#x27; + sfile + &#x27; + &#x22; &#x22; + &#x27;
+            outputFn + '("COVERAGE " + ' + sfile + ' + " " + '
                 + JSON.stringify(JSON.stringify(expected))
-            + &#x27;);&#x27;
-            + &#x27;var __coverage = &#x27;
+            + ');'
+            + 'var __coverage = '
             + JSON.stringify(expected.reduce(function (acc, x, ix) {
                 acc[ix] = x;
                 return acc;
-            }, {})) + &#x27;;&#x27;
-            + &#x27;var __coverageFunction = function () {&#x27;
-                + &#x27;var a=[].slice.call(arguments);&#x27;
-                + &#x27;a.splice(-1, 0, &#x22;__coverageWrap&#x22;);&#x27;
-                + &#x27;var f=Function.apply(this, a);&#x27;
-                + &#x27;return function(){&#x27;
-                    + &#x27;var b=[].slice.call(arguments);&#x27;
-                    + &#x27;b.push(__coverageWrap);&#x27;
-                    + &#x27;return f.apply(this, b);&#x27;
-                + &#x27;}&#x27;
-            + &#x27;};&#x27;
-            + &#x27;__coverageFunction.prototype = Function.prototype;&#x27;
-            + &#x27;var __coverageWrap = function (index) {&#x27;
-                + &#x27;if (__coverage[index]) &#x27; + outputFn
-                    + &#x27;(&#x22;COVERED &#x22; + &#x27; + sfile
-                    + &#x27; + &#x22; &#x22; + index);&#x27;
-                + &#x27;delete __coverage[index];&#x27;
-                + &#x27;return function (x) { return x }&#x27;
-            + &#x27;};&#x27;
-            + &#x27;(function (Function) {\n&#x27;
+            }, {})) + ';'
+            + 'var __coverageFunction = function () {'
+                + 'var a=[].slice.call(arguments);'
+                + 'a.splice(-1, 0, "__coverageWrap");'
+                + 'var f=Function.apply(this, a);'
+                + 'return function(){'
+                    + 'var b=[].slice.call(arguments);'
+                    + 'b.push(__coverageWrap);'
+                    + 'return f.apply(this, b);'
+                + '}'
+            + '};'
+            + '__coverageFunction.prototype = Function.prototype;'
+            + 'var __coverageWrap = function (index) {'
+                + 'if (__coverage[index]) ' + outputFn
+                    + '("COVERED " + ' + sfile
+                    + ' + " " + index);'
+                + 'delete __coverage[index];'
+                + 'return function (x) { return x }'
+            + '};'
+            + '(function (Function) {\n'
         );
         this.push(src);
-        this.push(&#x27;\n})(__coverageFunction)&#x27;);
+        this.push('\n})(__coverageFunction)');
         this.push(null);
     }
 
     function walk (node) {
         var index = expected.length;
-        if (node.type === &#x27;VariableDeclarator&#x27; &#x26;&#x26; node.init) {
+        if (node.type === 'VariableDeclarator' &amp;&amp; node.init) {
             expected.push(node.init.loc);
             node.init.update(
-                &#x27;(__coverageWrap(&#x27; + index + &#x27;)(&#x27;
-                + node.init.source() + &#x27;))&#x27;
+                '(__coverageWrap(' + index + ')('
+                + node.init.source() + '))'
             );
         }
         else if (/Expression$/.test(node.type)
-        &#x26;&#x26; node.parent.type !== &#x27;UnaryExpression&#x27; ...</pre></li>
+        &amp;&amp; node.parent.type !== 'UnaryExpression' ...</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
 
@@ -211,3 +204,4 @@
     ]
 </div>
 </div>
+</body></html>

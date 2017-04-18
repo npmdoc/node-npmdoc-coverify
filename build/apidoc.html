@@ -61,12 +61,147 @@
 
     <li class="apidocModuleLi"><a href="#apidoc.module.coverify">module coverify</a><ol>
 
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.coverify.coverify">
+            function <span class="apidocSignatureSpan"></span>coverify
+            <span class="apidocSignatureSpan">(file, opts)</span>
+            </a>
+
+        </li>
+
     </ol></li>
 
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.coverify" id="apidoc.module.coverify">module coverify</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.coverify.coverify" id="apidoc.element.coverify.coverify">
+        function <span class="apidocSignatureSpan"></span>coverify
+        <span class="apidocSignatureSpan">(file, opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">coverify = function (file, opts) {
+    if (typeof file === &#x27;object&#x27;) {
+        opts = file;
+        file = undefined;
+    }
+    if (!opts) opts = {};
+    var outputFn = opts.output || &#x27;console.log&#x27;;
+
+    var expected = [];
+
+    var chunks = [];
+    var stream = through(write, end);
+    return stream;
+
+    function write (buf, enc, next) { chunks.push(buf); next() }
+
+    function end () {
+        var body = Buffer.concat(chunks)
+            .toString(&#x27;utf8&#x27;)
+            .replace(/^#!/, &#x27;//#!&#x27;)
+        ;
+
+        if (file.match(/\.json$/)) {
+            this.push(&#x27;module.exports=&#x27; + body);
+            this.push(null);
+            return;
+        }
+
+        var fopts = { locations: true, ecmaVersion: 6 };
+        try { var src = falafel(body, fopts, walk) + &#x27;&#x27; }
+        catch (err) { return onerror(err, file,body) }
+        var sfile = JSON.stringify(JSON.stringify(file));
+
+        var origBody = body;
+        var bodySourceMap = convertSourceMap.fromSource(body);
+        if (bodySourceMap &#x26;&#x26; bodySourceMap.sourcemap.mappings) {
+            bodySourceMap = new sourceMap.SourceMapConsumer(bodySourceMap.sourcemap);
+            origBody = bodySourceMap.sourceContentFor(slash(file));
+            function originalLoc (loc) {
+                var pos = bodySourceMap.originalPositionFor(loc);
+                if (pos.line &#x26;&#x26; pos.column) {
+                    return { line: pos.line, column: pos.column };
+                }
+            }
+            expected = expected.map(function (loc) {
+                var origStart = originalLoc(loc.start);
+                var origEnd = originalLoc(loc.end);
+                if (origStart &#x26;&#x26; origEnd) {
+                    return { start: originalLoc(loc.start), end: originalLoc(loc.end) };
+                }
+                else return false;
+            });
+        }
+
+        var lines = origBody.split(&#x27;\n&#x27;);
+        var lineOffsets = [];
+        var offset = 0;
+        for (var i = 0; i &#x3c; lines.length; i++) {
+            lineOffsets[i] = offset;
+            offset += lines[i].length + 1;
+        }
+        expected = expected.map(function(loc) {
+            if (!loc) return false;
+            return [
+                lineOffsets[loc.start.line - 1] + loc.start.column,
+                lineOffsets[loc.end.line - 1] + loc.end.column
+            ];
+        });
+
+        this.push(
+            outputFn + &#x27;(&#x22;COVERAGE &#x22; + &#x27; + sfile + &#x27; + &#x22; &#x22; + &#x27;
+                + JSON.stringify(JSON.stringify(expected))
+            + &#x27;);&#x27;
+            + &#x27;var __coverage = &#x27;
+            + JSON.stringify(expected.reduce(function (acc, x, ix) {
+                acc[ix] = x;
+                return acc;
+            }, {})) + &#x27;;&#x27;
+            + &#x27;var __coverageFunction = function () {&#x27;
+                + &#x27;var a=[].slice.call(arguments);&#x27;
+                + &#x27;a.splice(-1, 0, &#x22;__coverageWrap&#x22;);&#x27;
+                + &#x27;var f=Function.apply(this, a);&#x27;
+                + &#x27;return function(){&#x27;
+                    + &#x27;var b=[].slice.call(arguments);&#x27;
+                    + &#x27;b.push(__coverageWrap);&#x27;
+                    + &#x27;return f.apply(this, b);&#x27;
+                + &#x27;}&#x27;
+            + &#x27;};&#x27;
+            + &#x27;__coverageFunction.prototype = Function.prototype;&#x27;
+            + &#x27;var __coverageWrap = function (index) {&#x27;
+                + &#x27;if (__coverage[index]) &#x27; + outputFn
+                    + &#x27;(&#x22;COVERED &#x22; + &#x27; + sfile
+                    + &#x27; + &#x22; &#x22; + index);&#x27;
+                + &#x27;delete __coverage[index];&#x27;
+                + &#x27;return function (x) { return x }&#x27;
+            + &#x27;};&#x27;
+            + &#x27;(function (Function) {\n&#x27;
+        );
+        this.push(src);
+        this.push(&#x27;\n})(__coverageFunction)&#x27;);
+        this.push(null);
+    }
+
+    function walk (node) {
+        var index = expected.length;
+        if (node.type === &#x27;VariableDeclarator&#x27; &#x26;&#x26; node.init) {
+            expected.push(node.init.loc);
+            node.init.update(
+                &#x27;(__coverageWrap(&#x27; + index + &#x27;)(&#x27;
+                + node.init.source() + &#x27;))&#x27;
+            );
+        }
+        else if (/Expression$/.test(node.type)
+        &#x26;&#x26; node.parent.type !== &#x27;UnaryExpression&#x27; ...</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 </div>
 
