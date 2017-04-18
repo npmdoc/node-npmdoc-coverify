@@ -1,9 +1,14 @@
-# api documentation for  [coverify (v1.4.1)](https://github.com/substack/coverify)  [![npm package](https://img.shields.io/npm/v/npmdoc-coverify.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-coverify) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-coverify.svg)](https://travis-ci.org/npmdoc/node-npmdoc-coverify)
+# npmdoc-coverify
+
+#### api documentation for  [coverify (v1.4.1)](https://github.com/substack/coverify)  [![npm package](https://img.shields.io/npm/v/npmdoc-coverify.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-coverify) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-coverify.svg)](https://travis-ci.org/npmdoc/node-npmdoc-coverify)
+
 #### code coverage browserify transform
 
-[![NPM](https://nodei.co/npm/coverify.png?downloads=true)](https://www.npmjs.com/package/coverify)
+[![NPM](https://nodei.co/npm/coverify.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/coverify)
 
-[![apidoc](https://npmdoc.github.io/node-npmdoc-coverify/build/screenCapture.buildNpmdoc.browser._2Fhome_2Ftravis_2Fbuild_2Fnpmdoc_2Fnode-npmdoc-coverify_2Ftmp_2Fbuild_2Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-coverify/build/apidoc.html)
+- [https://npmdoc.github.io/node-npmdoc-coverify/build/apidoc.html](https://npmdoc.github.io/node-npmdoc-coverify/build/apidoc.html)
+
+[![apidoc](https://npmdoc.github.io/node-npmdoc-coverify/build/screenCapture.buildCi.browser.%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-coverify/build/apidoc.html)
 
 ![npmPackageListing](https://npmdoc.github.io/node-npmdoc-coverify/build/screenCapture.npmPackageListing.svg)
 
@@ -18,7 +23,6 @@
 {
     "author": {
         "name": "James Halliday",
-        "email": "mail@substack.net",
         "url": "http://substack.net"
     },
     "bin": {
@@ -60,17 +64,14 @@
     "main": "index.js",
     "maintainers": [
         {
-            "name": "substack",
-            "email": "mail@substack.net"
+            "name": "substack"
         },
         {
-            "name": "chromakode",
-            "email": "npm@chromakode.com"
+            "name": "chromakode"
         }
     ],
     "name": "coverify",
     "optionalDependencies": {},
-    "readme": "ERROR: No README data found!",
     "repository": {
         "type": "git",
         "url": "git://github.com/substack/coverify.git"
@@ -99,16 +100,6 @@
     "version": "1.4.1"
 }
 ```
-
-
-
-# <a name="apidoc.tableOfContents"></a>[table of contents](#apidoc.tableOfContents)
-
-#### [module coverify](#apidoc.module.coverify)
-
-
-
-# <a name="apidoc.module.coverify"></a>[module coverify](#apidoc.module.coverify)
 
 
 
